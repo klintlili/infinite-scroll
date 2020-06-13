@@ -1,0 +1,26 @@
+{
+  "name": "klintlili/yii2-infinitescroll",
+  "description": "Infinite Scroll is a JavaScript plugin that automatically adds the next page, saving users from a full page load.",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "extension",
+    "Infinite Scroll"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "klintlili",
+      "email": "909102757@qq.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "*",
+    "bower-asset/infinite-scroll": "v3.0.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "klintlili\\infinitescroll\\": "src"
+    }
+  }
+}
