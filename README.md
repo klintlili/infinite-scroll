@@ -3,9 +3,9 @@ yii2 widgets infinite-scroll，Infinite Scroll is a JavaScript plugin that autom
 
 useful
 
-<?php
+    <?php
         echo "Hello world!";
-?>
+    ?>
 
 echo ListView::widget([
     'dataProvider' => $dataProvider,
