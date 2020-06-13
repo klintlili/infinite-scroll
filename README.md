@@ -33,6 +33,48 @@ useful
      ]);
 
     ?>
+
+    <?php
+    $customFilter = <<<EOF
+        function setPath() {
+            var currentPage = ($currenPage+1);    
+            var next = currentPage+this.pageIndex;
+            if(next <= $pageCount){
+                return '/test/index2?page='+ next +'&per-page=15';
+            }
+    }
+    EOF;
+    $this->registerJs($customFilter, \yii\web\View::POS_END);
+    //-------------------------------------//
+
+    var grid = document.querySelector(\'.grid\');
+
+    var msnry = new Masonry( grid, {
+      itemSelector: \'none\', // select none at first
+      columnWidth: \'.grid__col-sizer\',
+      gutter: \'.grid__gutter-sizer\',
+      percentPosition: true,
+      stagger: 30,
+      // nicer reveal transition
+      visibleStyle: { transform: \'translateY(0)\', opacity: 1 },
+      hiddenStyle: { transform: \'translateY(100px)\', opacity: 0 },
+    });
+
+
+    // initial items reveal
+    imagesLoaded( grid, function() {
+      grid.classList.remove(\'are-images-unloaded\');
+      msnry.options.itemSelector = \'.grid__item\';
+      var items = grid.querySelectorAll(\'.grid__item\');
+      msnry.appended( items );
+    });
+
+    //-------------------------------------//
+    ', \yii\web\View::POS_END);?>
+    
+    
+    
+    
     
     css
         body {
