@@ -8,7 +8,7 @@
     "Infinite Scroll"
   ],
   "license": "MIT",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "authors": [
     {
       "name": "klintlili",
