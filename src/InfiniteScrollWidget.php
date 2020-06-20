@@ -15,6 +15,14 @@ class InfiniteScrollWidget extends Widget
     public $pluginOptions = [];
     public $clientEvents = [];
 
+    /**
+     * @var bool whether to register link tags in the HTML header for prev, next, first and last page.
+     * Defaults to `false` to avoid conflicts when multiple pagers are used on one page.
+     * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
+     * @see registerLinkTags()
+     */
+    public $registerLinkTags = false;
+
     private $_assetBundle;
 
     public function init()
@@ -30,6 +38,14 @@ class InfiniteScrollWidget extends Widget
         }
         echo $this->renderPageButtons();
         $this->registerJs();
+    }
+
+    protected function registerLinkTags()
+    {
+        $view = $this->getView();
+        foreach ($this->pagination->getLinks() as $rel => $href) {
+            $view->registerLinkTag(['rel' => $rel, 'href' => $href], $rel);
+        }
     }
 
     /**
