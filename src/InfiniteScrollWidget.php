@@ -6,14 +6,24 @@ use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\base\Widget;
+use yii\data\Pagination;
 
 class InfiniteScrollWidget extends Widget
 {
+    /**
+     * @var Pagination the pagination object that this pager is associated with.
+     * You must set this property in order to make LinkPager work.
+     */
+    public $pagination;
     public $loadButtonLabel = 'Load more...';
     public $loadButtonOptions = ['class' => 'load hidden'];
     public $contentSelector;
     public $pluginOptions = [];
     public $clientEvents = [];
+    /**
+     * @var bool Hide widget when only one page exist.
+     */
+    public $hideOnSinglePage = true;
 
     /**
      * @var bool whether to register link tags in the HTML header for prev, next, first and last page.
@@ -28,6 +38,9 @@ class InfiniteScrollWidget extends Widget
     public function init()
     {
         parent::init();
+        if ($this->pagination === null) {
+            throw new InvalidConfigException('The "pagination" property must be set.');
+        }
         $this->getAssetBundle();
     }
 
@@ -104,8 +117,8 @@ infScroll.on( '{$key}', $clientEvents);
 JS;
                 $result[] = $js;
             }
+            $result = implode(PHP_EOL, $result);
+            $this->view->registerJs($result);
         }
-        $result = implode(PHP_EOL,$result);
-        $this->view->registerJs($result);
     }
 }

@@ -4,6 +4,8 @@ use yii\widgets\ListView;
 
 $this->title = '图片集合';
 $this->params['breadcrumbs'][] = $this->title;
+//masonry
+$this->registerJsFile("@web/js/masonry.pkgd.min.js", ["depends" => ["backend\\assets\\AppAsset"]]);
 ?>
     <style type="text/css">
         body {
@@ -11,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
             line-height: 1.4;
             font-size: 18px;
             padding: 20px;
-            /*max-width: 640px;*/
             margin: 0 auto;
         }
 
@@ -153,53 +154,40 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <button class="button view-more-button">View more</button>
     </p>
-<?php
-//$pageCount = $dataProvider->pagination->pageCount;
-//var_dump($pageCount);die;
-echo ListView::widget([
+<?= ListView::widget([
     'dataProvider' => $dataProvider,
     'itemView' => '_item',//子视图
-    'layout' => "{summary}\n <div class='grid are-images-unloaded'>
-        <div class='grid__col-sizer'></div>
-        <div class='grid__gutter-sizer'></div>{items}</div>\n<div class='pager'>{pager}</div>",
-//    'itemOptions' => ['tag' => false],
+    'layout' => "{summary}\n <div class='grid are-images-unloaded'><div class='grid__col-sizer'></div><div class='grid__gutter-sizer'></div>{items}</div>\n<div class='pager'>{pager}</div>",
+    'itemOptions' => ['tag' => false],
     'pager' => [
         'class' => \yiidoc\infinitescroll\InfiniteScrollWidget::class,
         'contentSelector' => '.grid',
         'pluginOptions' => [
-//            'path' => new \yii\web\JsExpression('aa'),
             'path' => new \yii\web\JsExpression('setPath'),
-//            'path' => '/test/index?page={{#}}',
+            //'path' => '/test/index?page={{#}}',
             //'append' => '.post',
             'append' => '.grid__item',
             'outlayer' => new \yii\web\JsExpression('msnry'),
             'status' => '.page-load-status',
-//            'status' => '.loader-wheel',
+            //'status' => '.loader-wheel',
             'history' => false,
             'debug' => true,
-//            'loadOnScroll' => false,
-//            'scrollThreshold' => false,
-//            'button' => '.view-more-button',
-//            'scrollThreshold'
+            //'loadOnScroll' => false,
+            //'scrollThreshold' => false,
+            //'button' => '.view-more-button',
         ],
         'clientEvents' => [
-//            'load' => new \yii\web\JsExpression('function( response, path ) {
-//                console.log(location.pathname)
-//    console.log(infScrollIns.pageIndex);
-//}'),
             'load' => 'function( response, path ) {
-                console.log(location.pathname)
-    console.log(infScrollIns.pageIndex);
-}',
+                console.log(location.pathname, infScrollIns.pageIndex);
+            }',
             'history' => new \yii\web\JsExpression('function() {
-    console.log(520,location.pathname);
-}'),
+                console.log('history',location.pathname);
+            }'),
         ]
     ],
 ]);
 $pageCount = $dataProvider->pagination->pageCount;
 $currenPage = $dataProvider->pagination->getPage();
-
 //var_dump($currenPage,$pageCount);die;
 ?>
     <!---->
@@ -231,36 +219,14 @@ $currenPage = $dataProvider->pagination->getPage();
 <?php
 $customFilter = <<<EOF
 function setPath() {
-//    console.log(111,this.pageIndex,this.loadCount)
-
-    // no value returned after 4th loaded page
-    var currentPage = ($currenPage+1);
-//    this.pageIndex = currentPage;
-//    if(currentPage == 0) currentPage = 1;
-//    var urlPage = currentPage+this.pageIndex;
-//    if(currentPage <= $pageCount && urlPage <= $pageCount){
-//        return '/test/index2?page='+ (currentPage+this.pageIndex) +'&per-page=15';
-////        return '/test/index2?page='+ (currentPage+1) +'&per-page=15';//不行
-////        return '/test/index?page={{#}}'; //不行
-//    }
-    
-        var next = currentPage+this.pageIndex;
+    var currentPage = ($currenPage+1);    
+    var next = currentPage+this.pageIndex;
     if(next <= $pageCount){
         return '/test/index2?page='+ next +'&per-page=15';
     }
-    
-    
-    
-//    if ( this.loadCount <  ({$pageCount}-1)) {
-//        var nextIndex = this.loadCount + 2;
-//        //return 'news/blog-p' + nextIndex + '.html';
-////        return $('#w1').attr('href');
-//        return '/test/index?page='+ nextIndex +'&per-page=15';
-//    }
 }
 EOF;
 $this->registerJs("
-
 //var elem = document.querySelector('.grid');
 //var infScroll = new InfiniteScroll( elem, {\"path\":'/test/index?page={{#}}',\"append\":\".grid__item\",\"outlayer\":msnry,\"status\":\".page-load-status\",\"debug\":true});
 //var infScrollIns = InfiniteScroll.data( elem )
